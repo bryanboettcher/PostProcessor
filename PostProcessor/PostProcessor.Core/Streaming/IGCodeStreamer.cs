@@ -1,6 +1,7 @@
-﻿using PostProcessor.Core.GCodes;
+﻿using System.Collections.Generic;
+using PostProcessor.Core.GCodes;
 
-namespace PostProcessor.App;
+namespace PostProcessor.Core.Streaming;
 
 /// <summary>
 /// Defines a very simple behavior for subsequent behavior

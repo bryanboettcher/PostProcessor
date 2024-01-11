@@ -1,4 +1,5 @@
 ﻿using PostProcessor.Core.GCodes;
+using PostProcessor.Core.Streaming.Streaming.Core;
 
 namespace PostProcessor.App;
 
@@ -8,7 +9,7 @@ public class Program
     {
         //await RunCode();
         var cmd = new StandardCommandGCode("G1X50 Y50 F39.5 ; test comment");
-        var g0 = new ExtrusionMoveCommand(cmd);
+        var g0 = new InterpolatedMoveCommand(cmd);
         foreach (var p in g0.Parameters)
         {
             Console.WriteLine(p);

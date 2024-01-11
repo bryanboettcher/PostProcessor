@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents an interpolated move that may include an E parameter for extrusion.
 /// </summary>
-public class ExtrusionMoveCommand : GenericMoveCommand
+public class InterpolatedMoveCommand : GenericMoveCommand
 {
     /// <summary>
     /// The current X position, if it exists.  Will be null if this move didn't have an X position.
@@ -50,7 +50,7 @@ public class ExtrusionMoveCommand : GenericMoveCommand
     }
 
     /// <inheritdoc />
-    public ExtrusionMoveCommand(StandardCommandGCode cmd) : base(cmd)
+    public InterpolatedMoveCommand(StandardCommandGCode cmd) : base(cmd)
     {
     }
 }

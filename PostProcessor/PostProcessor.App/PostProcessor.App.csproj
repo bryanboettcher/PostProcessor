@@ -15,4 +15,8 @@
     <ProjectReference Include="..\PostProcessor.Core\PostProcessor.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Streaming\Core\" />
+  </ItemGroup>
+
 </Project>
