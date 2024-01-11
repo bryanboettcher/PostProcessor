@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
+using System.Text;
 
 namespace PostProcessor.Core.GCodes;
 
@@ -19,10 +18,23 @@ public class BaseGCodeCommand : GenericGCodeStatement
     /// </summary>
     public ushort CommandNumber { get; }
 
+    /// <summary>
+    /// Any remaining parameters that were on this command, generally
+    /// useful for further parsing rather than end-use directly.
+    /// <code>G1 X113.56 Y39.88</code> as an input will have
+    /// <code>[ "X113.56", "Y39.88" ]</code> as items in the string array.
+    /// All whitespace will be trimmed at the front and end of the parameters.
+    ///
+    /// If the command has a trailing comment, it will be the last item, and will
+    /// start with a semicolon.
+    /// </summary>
+    public IReadOnlyList<string> Parameters { get; }
+
     /// <inheritdoc />
     protected BaseGCodeCommand(string originalStatement) : base(originalStatement)
     {
         CommandNumber = ParseCommandNumber(originalStatement);
+        Parameters = GetParameters(originalStatement);
     }
 
     private static ushort ParseCommandNumber(string input)
@@ -44,8 +56,6 @@ public class BaseGCodeCommand : GenericGCodeStatement
         return new Range(1, Index.End);
     }
 
-    private static readonly char[] ParameterSeparators = @"ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
-
     /// <summary>
     /// Breaks up any parameters past the [char][digits] beginning of the line,
     /// so something like G1X10Y10 will return [ "X10", "Y10" ]
@@ -56,28 +66,44 @@ public class BaseGCodeCommand : GenericGCodeStatement
         var inputSpan = input.AsSpan();
         
         var commandIdRange = GetRange(inputSpan);
-        var index = commandIdRange.End.Value;
-
-        if (index == inputSpan.Length)
+        var index = commandIdRange.End;
+        
+        if (index.Equals(Index.End))
             return Array.Empty<string>();
 
-        var commentLocation = inputSpan.IndexOf(';');
-        var end = commentLocation == -1
-            ? Index.End
-            : commentLocation;
-
-        var sanitizedString = inputSpan[index..end].ToString();
-        var modifiedParameters = sanitizedString.Split(
-            ParameterSeparators,
-            StringSplitOptions.RemoveEmptyEntries
-        ).ToList();
-
         var parameters = new List<string>();
+        var sanitized = inputSpan[index..];
+        var inParameter = false;
         
-        if (commentLocation > 0)
-            parameters.Add(inputSpan[commentLocation..].ToString());
+        var sb = new StringBuilder();
+        for (var i = 0; i < sanitized.Length; i++)
+        {
+            var c = sanitized[i];
+            if (char.IsWhiteSpace(c))
+                continue;
 
+            if (char.IsLetter(c) && inParameter)
+            {
+                parameters.Add(sb.ToString());
+                sb.Clear();
+                sb.Append(c);
+                inParameter = false;
+                continue;
+            }
+            
+            if (c == ';')
+            {
+                parameters.Add(sb.ToString());
+                sb.Clear();
+                sb.Append(sanitized[i..]);
+                break;
+            }
 
+            sb.Append(c);
+            inParameter = true;
+        }
+
+        parameters.Add(sb.ToString());
 
         return parameters;
     }

@@ -17,28 +17,14 @@ public class DwellCommand : StandardCommandGCode
         _delayMilliseconds = ParseCommand(cmd);
     }
 
-    private static int ParseCommand(StandardCommandGCode cmd)
+    private int ParseCommand(StandardCommandGCode cmd)
     {
-        return 5000;
-    }
-}
+        var dwellMillis = Parameters.FirstOrDefault(p => char.ToUpperInvariant(p[0]) == 'P');
+        if (dwellMillis is not null) return int.Parse(dwellMillis[1..]);
 
-public class RapidMoveCommand : StandardCommandGCode
-{
-    /// <inheritdoc />
-    public RapidMoveCommand(StandardCommandGCode cmd) : base(cmd.OriginalStatement)
-    {
-        var parameters = GetParameters(cmd.OriginalStatement);
-        var parameterList = parameters.ToList();
-    }
-}
+        var dwellSeconds = Parameters.FirstOrDefault(p => char.ToUpperInvariant(p[0]) == 'S');
+        if (dwellSeconds is not null) return (int)(1000 * double.Parse(dwellSeconds[1..]));
 
-public class ExtrusionMoveCommand : StandardCommandGCode
-{
-    /// <inheritdoc />
-    public ExtrusionMoveCommand(StandardCommandGCode cmd) : base(cmd.OriginalStatement)
-    {
-        var parameters = GetParameters(cmd.OriginalStatement);
-        var parameterList = parameters.ToList();
+        return 0;
     }
 }

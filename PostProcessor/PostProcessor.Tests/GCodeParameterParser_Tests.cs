@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using FluentAssertions;
 using NUnit.Framework;
@@ -21,10 +20,12 @@ public class GCodeParameterParser_Tests
 
     protected string Input = string.Empty;
     protected IReadOnlyList<string> Output = Array.Empty<string>();
-    protected TestGCodeCommand Subject;
+    protected Lazy<TestGCodeCommand> _sut;
+
+    protected TestGCodeCommand Subject => _sut.Value;
 
     public GCodeParameterParser_Tests() 
-        => Subject = new TestGCodeCommand(Input);
+        => _sut = new(() => new TestGCodeCommand(Input));
 
     [SetUp]
     public void Because() => Output = Subject.GetParameters();

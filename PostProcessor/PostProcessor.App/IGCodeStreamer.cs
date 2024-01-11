@@ -1,5 +1,4 @@
-﻿using PostProcessor.Core;
-using PostProcessor.Core.GCodes;
+﻿using PostProcessor.Core.GCodes;
 
 namespace PostProcessor.App;
 
