@@ -1,5 +1,5 @@
 ﻿using PostProcessor.Core.GCodes;
-using PostProcessor.Core.Streaming.Streaming.Core;
+using PostProcessor.Core.Streaming;
 
 namespace PostProcessor.App;
 

@@ -1,24 +1,19 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using PostProcessor.Core.GCodes;
 
-namespace PostProcessor.Core.Streaming.Streaming.Core;
+namespace PostProcessor.Core.Streaming;
 
 /// <summary>
 /// A GCode streamer that understands the setup or configuration commands.
 /// </summary>
-public class ConfigurationAwareGCodeStreamer : IGCodeStreamer
+public class ConfigurationAwareGCodeStreamer : BaseGCodeStreamer, IGCodeStreamer
 {
-    /// <inheritdoc />
-    public IEnumerable<GenericGCodeStatement> Process(IEnumerable<GenericGCodeStatement> input)
-        => input.SelectMany(HandleStatement);
-
-    private static IEnumerable<GenericGCodeStatement> HandleStatement(GenericGCodeStatement cmd)
+    protected override IEnumerable<GenericGCodeStatement>? Handle(GenericGCodeStatement cmd)
     {
         if (cmd is StandardCommandGCode { CommandNumber: 20 or 21 } units)
             return BuildSetUnitsCommand(units);
 
-        return ForwardCommand(cmd);
+        return null;
     }
     
     private static IEnumerable<GenericGCodeStatement> BuildSetUnitsCommand(StandardCommandGCode cmd)
@@ -28,10 +23,5 @@ public class ConfigurationAwareGCodeStreamer : IGCodeStreamer
 
         if (cmd.CommandNumber == 21)
             yield return new SetMillimeterUnitsCommand(cmd);
-    }
-    
-    private static IEnumerable<GenericGCodeStatement> ForwardCommand(GenericGCodeStatement cmd)
-    {
-        yield return cmd;
     }
 }
