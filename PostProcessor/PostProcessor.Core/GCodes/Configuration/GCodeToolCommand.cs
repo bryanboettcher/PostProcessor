@@ -1,4 +1,6 @@
-﻿namespace PostProcessor.Core.GCodes;
+﻿using PostProcessor.Core.GCodes.Core;
+
+namespace PostProcessor.Core.GCodes.Configuration;
 
 /// <summary>
 /// Represents a "change tool" command, which may impact coordinate offsets.

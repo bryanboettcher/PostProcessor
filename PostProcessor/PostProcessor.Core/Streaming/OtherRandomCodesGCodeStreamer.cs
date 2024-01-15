@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using PostProcessor.Core.GCodes;
+using PostProcessor.Core.GCodes.Core;
 
 namespace PostProcessor.Core.Streaming;
 

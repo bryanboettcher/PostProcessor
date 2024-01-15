@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace PostProcessor.Core.GCodes;
+namespace PostProcessor.Core.GCodes.Core;
 
 /// <summary>
 /// An object representing any sort of "move" command, and handles

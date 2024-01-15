@@ -1,4 +1,4 @@
-﻿namespace PostProcessor.Core.GCodes;
+﻿namespace PostProcessor.Core.GCodes.Configuration.Motion;
 
 /// <summary>
 /// Used to indicate coordinates are in inches.

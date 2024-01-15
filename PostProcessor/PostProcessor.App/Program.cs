@@ -1,5 +1,7 @@
-﻿using PostProcessor.Core.GCodes;
-using PostProcessor.Core.Streaming;
+﻿using Lamar.Microsoft.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace PostProcessor.App;
 
@@ -7,27 +9,52 @@ public class Program
 {
     public static async Task Main(string[] args)
     {
-        //await RunCode();
-        var cmd = new StandardCommandGCode("G1X50 Y50 F39.5 ; test comment");
-        var g0 = new InterpolatedMoveCommand(cmd);
-        foreach (var p in g0.Parameters)
-        {
-            Console.WriteLine(p);
-        }
+        // Some files may need command emitted up front, like SetMarlinCommand
+        // to identify them as a particular 'flavor' of GCode.  There is nothing
+        // in the default code (yet?) to identify files.
+
+        var hostBuilder = CreateDefaultApp(args);
+        var host = hostBuilder.Build();
+
+        var app = host.Services.GetRequiredService<ProcessorApp>();
+        
+        await Task.WhenAll(
+            host.StartAsync(),
+            app.RunAsync()
+        );
     }
 
-    public static async Task RunCode()
-    {
-        var input = File.ReadLines(@"D:\\input1.gcode");
-
-        var parser = new SimpleGCodeParser();
-        var planner = new MotionAwareGCodeStreamer();
-
-        var output = planner.Process(parser.Ingest(input));
-
-        foreach (var line in output.Take(500))
+    private static IHostBuilder CreateDefaultApp(string[] args)
+        => Host.CreateDefaultBuilder()
+        .UseLamar(conf =>
         {
-            Console.WriteLine(line.ToHumanReadableString());
-        }
+            conf.Scan(scan =>
+            {
+                scan.SingleImplementationsOfInterface();
+                scan.AssembliesFromApplicationBaseDirectory();
+            });
+        })
+        .ConfigureLogging(conf =>
+        {
+            conf.ClearProviders();
+            conf.AddConsole();
+        })
+        .UseConsoleLifetime();
+
+}
+
+public class ProcessorApp
+{
+    private readonly IHostApplicationLifetime _appLifetime;
+
+    public ProcessorApp(IHostApplicationLifetime appLifetime)
+    {
+        _appLifetime = appLifetime;
+    }
+
+    public async Task RunAsync()
+    {
+        var stopToken = _appLifetime.ApplicationStopping;
+        await Task.CompletedTask;
     }
 }

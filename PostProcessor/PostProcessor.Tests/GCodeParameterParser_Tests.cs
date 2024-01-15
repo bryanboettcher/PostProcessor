@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using FluentAssertions;
 using NUnit.Framework;
 using PostProcessor.Core.GCodes;
+using PostProcessor.Core.GCodes.Core;
 
 namespace PostProcessor.Tests;
 

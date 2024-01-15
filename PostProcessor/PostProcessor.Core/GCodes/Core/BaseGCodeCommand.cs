@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace PostProcessor.Core.GCodes;
+namespace PostProcessor.Core.GCodes.Core;
 
 /// <summary>
 /// Represents a base GCode command, in the format of:

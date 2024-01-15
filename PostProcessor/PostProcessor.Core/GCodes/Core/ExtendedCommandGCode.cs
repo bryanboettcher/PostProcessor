@@ -1,4 +1,4 @@
-﻿namespace PostProcessor.Core.GCodes;
+﻿namespace PostProcessor.Core.GCodes.Core;
 
 /// <summary>
 /// Extended GCode commands are vendor/project-specific enhancements

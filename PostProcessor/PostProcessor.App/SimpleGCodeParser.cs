@@ -1,5 +1,7 @@
 ﻿using PostProcessor.Core;
 using PostProcessor.Core.GCodes;
+using PostProcessor.Core.GCodes.Configuration;
+using PostProcessor.Core.GCodes.Core;
 
 namespace PostProcessor.App;
 
@@ -18,9 +20,9 @@ public class SimpleGCodeParser : IGCodeParser
             (input => input.Length == 0, input => new GCodeBlankLine()),
             (input => input[0] == ';', input => new GCodeComment(input)),
             (input => input.Length == 1, input => new UnknownGCodeStatement(input)),
-            (input => input[0] is 'G' or 'g' && char.IsNumber(input[1]), input => new StandardCommandGCode(input)),
-            (input => input[0] is 'M' or 'm' && char.IsNumber(input[1]), input => new ExtendedCommandGCode(input)),
-            (input => input[0] is 'T' or 't' && char.IsNumber(input[1]), input => new GCodeToolCommand(input)),
+            (input => input[0] is 'G' && char.IsNumber(input[1]), input => new StandardCommandGCode(input)),
+            (input => input[0] is 'M' && char.IsNumber(input[1]), input => new ExtendedCommandGCode(input)),
+            (input => input[0] is 'T' && char.IsNumber(input[1]), input => new GCodeToolCommand(input)),
             (_ => true, input => new UnknownGCodeStatement(input))
         };
     }
@@ -36,6 +38,6 @@ public class SimpleGCodeParser : IGCodeParser
             {
                 Predicate = b.test,
                 Factory = b.factory,
-            }).First(b => b.Predicate(arg))
+            }).First(b => b.Predicate(arg.ToUpperInvariant()))
             .Factory(arg);
 }

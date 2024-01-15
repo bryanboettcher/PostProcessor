@@ -1,4 +1,4 @@
-﻿namespace PostProcessor.Core.GCodes;
+﻿namespace PostProcessor.Core.GCodes.Core;
 
 /// <summary>
 /// Base object representing any GCode entry.

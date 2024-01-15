@@ -1,4 +1,4 @@
-﻿namespace PostProcessor.Core.GCodes;
+﻿namespace PostProcessor.Core.GCodes.Core;
 
 /// <summary>
 /// Represents an interpolated move that may include an E parameter for extrusion.

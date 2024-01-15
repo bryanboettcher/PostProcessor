@@ -1,4 +1,4 @@
-﻿namespace PostProcessor.Core.GCodes;
+﻿namespace PostProcessor.Core.GCodes.Core;
 
 /// <summary>
 /// Represents an unknown GCode statement for something else to interpret later.

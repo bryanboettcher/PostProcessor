@@ -1,4 +1,6 @@
-﻿namespace PostProcessor.Core.GCodes;
+﻿using PostProcessor.Core.GCodes.Core;
+
+namespace PostProcessor.Core.GCodes;
 
 /// <summary>
 /// Object representing just a blank line in the source data.

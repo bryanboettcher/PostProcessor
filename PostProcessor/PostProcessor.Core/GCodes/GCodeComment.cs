@@ -1,4 +1,6 @@
-﻿namespace PostProcessor.Core.GCodes;
+﻿using PostProcessor.Core.GCodes.Core;
+
+namespace PostProcessor.Core.GCodes;
 
 /// <summary>
 /// Represents a comment in a GCode file, for either removing or generating.
