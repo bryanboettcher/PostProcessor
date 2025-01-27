@@ -42,19 +42,3 @@ public class Program
         .UseConsoleLifetime();
 
 }
-
-public class ProcessorApp
-{
-    private readonly IHostApplicationLifetime _appLifetime;
-
-    public ProcessorApp(IHostApplicationLifetime appLifetime)
-    {
-        _appLifetime = appLifetime;
-    }
-
-    public async Task RunAsync()
-    {
-        var stopToken = _appLifetime.ApplicationStopping;
-        await Task.CompletedTask;
-    }
-}
