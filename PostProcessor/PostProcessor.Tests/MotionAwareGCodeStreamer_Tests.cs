@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
+using PostProcessor.Core.GCodes;
 using PostProcessor.Core.GCodes.Core;
 using PostProcessor.Core.Streaming;
 
@@ -29,10 +30,11 @@ public class MotionAwareGCodeStreamer_Tests
             Input = new GenericGCodeStatement("G0 X1 Y2 Z3");
         }
 
-        [Test] public void It_should_return_a_statement() => Assert.That(Output, Is.Not.Null);
+        [Test] 
+        public void It_should_return_a_statement() => Assert.That(Output, Is.Not.Null);
 
         [Test]
-        public void It_should_produce_a_rapid_move() => Assert.Fail("change this to an assertion ensuring Output is actually a RapidMoveCommand");
+        public void It_should_produce_a_rapid_move() => Assert.That(Output, Is.TypeOf<RapidMoveCommand>());
 
         [Test]
         public void It_should_keep_X_value() => Assert.Fail("change this to an assertion that ((RapidMoveCommand)Output).X is the right value");
