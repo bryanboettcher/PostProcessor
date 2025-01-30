@@ -27,7 +27,7 @@ public class MotionAwareGCodeStreamer_Tests
     {
         public When_processing_G0()
         {
-            Input = new GenericGCodeStatement("G0 X1 Y2 Z3");
+            Input = new StandardCommandGCode("G0 X1 Y2 Z3 F1200");
         }
 
         [Test] 
@@ -37,14 +37,44 @@ public class MotionAwareGCodeStreamer_Tests
         public void It_should_produce_a_rapid_move() => Assert.That(Output, Is.TypeOf<RapidMoveCommand>());
 
         [Test]
-        public void It_should_keep_X_value() => Assert.Fail("change this to an assertion that ((RapidMoveCommand)Output).X is the right value");
+        public void It_should_keep_X_value() => Assert.That(((RapidMoveCommand)Output!).X, Is.EqualTo(1));
 
         [Test]
-        public void It_should_keep_Y_value() => Assert.Fail("change this to an assertion that ((RapidMoveCommand)Output).Y is the right value");
+        public void It_should_keep_Y_value() => Assert.That(((RapidMoveCommand)Output!).Y, Is.EqualTo(2));
 
         [Test]
-        public void It_should_keep_Z_value() => Assert.Fail("change this to an assertion that ((RapidMoveCommand)Output).Z is the right value");
+        public void It_should_keep_Z_value() => Assert.That(((RapidMoveCommand)Output!).Z, Is.EqualTo(3));
+
+        [Test]
+        public void It_should_keep_F_value() => Assert.That(((RapidMoveCommand)Output!).Velocity, Is.EqualTo(1200));
     }
 
-    public class When_processing_G1 : MotionAwareGCodeStreamer_Tests { }
+    public class When_processing_G1 : MotionAwareGCodeStreamer_Tests
+    {
+        public When_processing_G1()
+        {
+            Input = new StandardCommandGCode("G1 X1 Y2 Z3 E10 F1200");
+        }
+
+        [Test]
+        public void It_should_return_a_statement() => Assert.That(Output, Is.Not.Null);
+
+        [Test]
+        public void It_should_produce_an_interpolated_move() => Assert.That(Output, Is.TypeOf<InterpolatedMoveCommand>());
+
+        [Test]
+        public void It_should_keep_X_value() => Assert.That(((InterpolatedMoveCommand)Output!).X, Is.EqualTo(1));
+
+        [Test]
+        public void It_should_keep_Y_value() => Assert.That(((InterpolatedMoveCommand)Output!).Y, Is.EqualTo(2));
+
+        [Test]
+        public void It_should_keep_Z_value() => Assert.That(((InterpolatedMoveCommand)Output!).Z, Is.EqualTo(3));
+
+        [Test]
+        public void It_should_keep_F_value() => Assert.That(((InterpolatedMoveCommand)Output!).Velocity, Is.EqualTo(1200));
+
+        [Test]
+        public void It_should_keep_E_value() => Assert.That(((InterpolatedMoveCommand)Output!).E, Is.EqualTo(10));
+    }
 }

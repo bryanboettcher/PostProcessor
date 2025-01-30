@@ -1,4 +1,5 @@
-﻿using PostProcessor.Core.GCodes.Core;
+﻿using System.Numerics;
+using PostProcessor.Core.GCodes.Core;
 
 namespace PostProcessor.Core.GCodes;
 
